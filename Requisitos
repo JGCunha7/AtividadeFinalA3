@@ -1,0 +1,26 @@
+Requisitos Funcionais (RF)
+RF01: O sistema deve permitir cadastrar profissionais de saúde com seus dados pessoais.
+RF02: O sistema deve permitir cadastrar especialidades médicas.
+RF03: O sistema deve associar um ou mais profissionais a uma ou mais especialidades (relação muitos para muitos).
+RF04: O sistema deve permitir o cadastro de pacientes com seus dados pessoais.
+RF05: O sistema deve registrar atendimentos realizados por profissionais para pacientes, incluindo data e descrição.
+RF06: O sistema deve permitir a criação de prescrições associadas a um atendimento específico.
+RF07: O sistema deve permitir adicionar itens (medicamentos e quantidade) a uma prescrição.
+RF08: O sistema deve permitir o cadastro de medicamentos, vinculando-os a categorias específicas.
+RF09: O sistema deve permitir o cadastro e a manutenção das categorias de medicamentos.
+RF10: O sistema deve permitir a visualização das prescrições feitas para um paciente em seus atendimentos.
+
+
+
+
+
+
+
+Requisitos Não Funcionais (RNF)
+RNF01: O sistema deve garantir a integridade referencial entre profissionais, especialidades e atendimentos.
+RNF02: O sistema deve responder às operações do usuário em até 2 segundos, em condições normais.
+RNF03: Os dados sensíveis, como CPF e informações médicas, devem ser armazenados de forma criptografada.
+RNF04: O sistema deve ser capaz de suportar múltiplos usuários acessando simultaneamente sem perda significativa de performance.
+RNF05: O sistema deve possuir interface intuitiva e amigável para facilitar o cadastro e consulta dos dados.
+
+
