@@ -1,0 +1,250 @@
+create table Pessoa(
+id number(10)not null,
+nome varchar(25)not null,
+cpf varchar(20)not null
+);
+
+create table Profissional(
+id number(10) not null,
+email varchar(40)not null,
+salario number(10,2)not null,
+id_pessoa number(10)not null
+);
+
+create table Paciente(
+id number (10)not null,
+data_nascimento Date not null,
+telefone varchar(25) not null,
+id_pessoa number(10)not null
+);
+
+create table Especialidade(
+id number (10) not null,
+nome varchar(30)not null,
+descricao nvarchar2(400)
+);
+
+create table ProfissionalEspecialidade(
+id number (10)not null,
+data_associacao date not null,
+ativo boolean not null,
+id_profissional number(10)not null,
+id_especialidade number(10) not null
+);
+
+create table Atendimento(
+id number(10)not null,
+data_hora Date not null,
+descricao nvarchar2(300)not null,
+id_profissional number(10)not null,
+id_paciente number(10)not null
+);
+
+create table Prescricao(
+id number(10)not null,
+data_prescricao date not null,
+validade date not null,
+observacoes nvarchar2(400),
+id_atendimento number(10) not null
+);
+
+create table medicamentoItem(
+id number(10) not null,
+quantidade number(10),
+dosagem varchar(50),
+id_prescricao number(10) not null,
+id_medicamento number(10) not null
+);
+
+create table Categoria(
+id number(10)not null,
+nome varchar(30)not null,
+descricao nvarchar2(300) not null
+);
+
+create table Medicamento(
+id number(10)not null,
+nome varchar(50)not null,
+descricao nvarchar2(300) not null,
+id_categoria number(10) not null
+);
+
+
+
+
+alter table Pessoa add primary key(id);
+alter table Profissional add primary key(id);
+alter table Paciente add primary key(id);
+alter table Especialidade add primary key(id);
+alter table ProfissionalEspecialidade add primary key(id);
+alter table Atendimento add primary key(id);
+alter table Prescricao add primary key(id);
+alter table MedicamentoItem add primary key(id);
+alter table Categoria add primary key(id);
+alter table Medicamento add primary key(id);
+
+alter table Profissional add foreign key(id_pessoa) references Pessoa(id);
+alter table Paciente add foreign key(id_pessoa) references Pessoa(id);
+alter table ProfissionalEspeialidade add foreign key(id_especialidade) references Especialidade(id);
+alter table ProfissionalEspeialidade add foreign key(id_profissional) references Profissional(id);
+alter table Atendimento add foreign key(id_profissional) references Profissional(id);
+alter table Atendimento add foreign key(id_paciente) references Paciente(id);
+alter table Prescricao add foreign key(id_atendimento) references Atendimento(id);
+alter table MedicamentoItem add foreign key(id_prescricao) references Prescricao(id);
+alter table MedicamentoItem add foreign key(id_Medicamento) references Medicamento(id);
+alter table Medicamento add foreign key(id_categoria) references Categoria(id);
+
+CREATE SEQUENCE pessoa_seq
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE
+ORDER;
+
+CREATE TRIGGER pessoa_trig
+BEFORE INSERT ON Pessoa FOR EACH ROW
+BEGIN
+:NEW.id := pessoa_seq.NEXTVAL;
+END;
+
+
+
+CREATE SEQUENCE paciente_seq
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE
+ORDER;
+
+CREATE TRIGGER paciente_trig
+BEFORE INSERT ON Paciente FOR EACH ROW
+BEGIN
+:NEW.id := paciente_seq.NEXTVAL;
+END;
+
+
+
+CREATE SEQUENCE profissional_seq
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE
+ORDER;
+
+CREATE TRIGGER profissional_trig
+BEFORE INSERT ON Profissonal FOR EACH ROW
+BEGIN
+:NEW.id := profissional_seq.NEXTVAL;
+END;
+
+
+
+CREATE SEQUENCE especialidade_seq
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE
+ORDER;
+
+CREATE TRIGGER especialidade_trig
+BEFORE INSERT ON Especialidade FOR EACH ROW
+BEGIN
+:NEW.id := especialidade_seq.NEXTVAL;
+END;
+
+
+
+CREATE SEQUENCE profissionalEspcialidade_seq
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE
+ORDER;
+
+CREATE TRIGGER profissionalEspcialidade_trig
+BEFORE INSERT ON ProfissionalEspecialidade FOR EACH ROW
+BEGIN
+:NEW.id := profissionalEspcialidade_seq.NEXTVAL;
+END;
+
+
+
+
+CREATE SEQUENCE atendiento_seq
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE
+ORDER;
+
+CREATE TRIGGER atendimento_trig
+BEFORE INSERT ON Atendimento FOR EACH ROW
+BEGIN
+:NEW.id := atendimento_seq.NEXTVAL;
+END;
+
+CREATE SEQUENCE prescricao_seq
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE
+ORDER;
+
+CREATE TRIGGER prescricao_trig
+BEFORE INSERT ON Prescricao FOR EACH ROW
+BEGIN
+:NEW.id := prescricao_seq.NEXTVAL;
+END;
+
+
+
+CREATE SEQUENCE medicamentoItem_seq
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE
+ORDER;
+
+CREATE TRIGGER medicamentoItem_trig
+BEFORE INSERT ON MedicamentoItem FOR EACH ROW
+BEGIN
+:NEW.id := medicamentoItem_seq.NEXTVAL;
+END;
+
+
+CREATE SEQUENCE categoria_seq
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE
+ORDER;
+
+CREATE TRIGGER categoria_trig
+BEFORE INSERT ON Categoria FOR EACH ROW
+BEGIN
+:NEW.id := categoria_seq.NEXTVAL;
+END;
+
+CREATE SEQUENCE medicamento_seq
+INCREMENT BY 1
+START WITH 1
+NOMAXVALUE
+NOCACHE
+NOCYCLE
+ORDER;
+
+CREATE TRIGGER medicamento_trig
+BEFORE INSERT ON Medicamento FOR EACH ROW
+BEGIN
+:NEW.id := medicamento_seq.NEXTVAL;
+END;
+
