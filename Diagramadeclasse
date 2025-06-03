@@ -1,0 +1,88 @@
+diagrama
+
+@startuml Diagrama de Classes 
+
+class Pessoa {
+  - nome: String
+  - cpf: int
+}
+
+class Especialidade {
+  - nome: String
+  - descricao: String
+}
+
+class ProfissionalEspecialidade {
+  - profissional: Profissional
+  - especialidade: Especialidade
+  - dataAssociacao: Date
+  - ativo: Boolean
+}
+
+class Profissional {
+  - salario: Double
+  - email: String
+  
+  +realizarAtendimento()
+  +cancelarAtendimento()
+}
+
+class Atendimento {
+  - dataHora: Date
+  - descricao: String
+  - profissional: Profissional
+  - paciente: Paciente
+}
+
+class Paciente {
+  - dataNascimento: Date
+  - telefone: String
+  
+  +agendarAtendimento()
+  +cancelarConsulta()
+}
+
+class Prescricao {
+  - dataPrescricao: Date
+  - atendimento: Atendimento
+  - validade: Date
+  - observacoes: String
+  
+  +validarPrescricao()
+}
+
+class Medicamentoitem {
+  - quantidade: int
+  - dosagem: String
+  - prescricao: Prescricao
+  - medicamento: Medicamento
+  
+  +alterarDosagem()
+}
+
+class Medicamento {
+  - nome: String
+  - descricao: String
+  - categoria: Categoria
+}
+
+class Categoria {
+  - nome: String
+  - descricao: String
+}
+
+Pessoa <|--- Profissional
+Pessoa <|--- Paciente
+
+Profissional o--> Atendimento
+Paciente o--> Atendimento 
+Atendimento o--> Prescricao
+Prescricao o--> Medicamentoitem  
+Medicamento o--> Medicamentoitem  
+Categoria o--> Medicamento 
+Especialidade o--> ProfissionalEspecialidade 
+Profissional o--> ProfissionalEspecialidade 
+
+@enduml
+
+
