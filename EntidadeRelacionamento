@@ -1,0 +1,98 @@
+@startuml 
+!define Table(name,desc) class name as "desc" << (T,#FFAAAA) >>
+!define PK(field) field
+!define FK(field) field
+
+
+Table(Pessoa, "Pessoa") {
+  PK(id_pessoa): number
+  nome: varchar
+  cpf: varchar
+}
+
+
+Table(Profissional, "Profissional") {
+  PK(id_profissional): number
+  FK(id_pessoa): number
+  email: varchar
+  salario: number
+}
+
+
+Table(Paciente, "Paciente") {
+  PK(id_paciente): number
+  FK(id_pessoa): number
+  data_nascimento: date
+  telefone: varchar
+}
+
+
+Table(Especialidade, "Especialidade") {
+  PK(id_especialidade): number
+  nome: varchar
+  descricao: nvarchar2
+}
+
+
+Table(ProfissionalEspecialidade, "ProfissionalEspecialidade") {
+  PK(id_prof_esp): number
+  FK(id_profissional): number
+  FK(id_especialidade): number
+  data_associacao: date
+  ativo: boolean
+}
+
+
+Table(Atendimento, "Atendimento") {
+  PK(id_atendimento): number
+  FK(id_profissional): number
+  FK(id_paciente): number
+  data_hora: date
+  descricao: nvarchar2
+}
+
+
+Table(Prescricao, "Prescricao") {
+  PK(id_prescricao): number
+  FK(id_atendimento): number
+  data_prescricao: date
+  validade: date
+  observacoes: nvarchar2
+}
+
+
+Table(Medicamento, "Medicamento") {
+  PK(id_medicamento): number
+  nome: varchar
+  descricao: nvarchar2
+  FK(id_categoria): number
+}
+
+
+Table(Categoria, "Categoria") {
+  PK(id_categoria): number
+  nome: varchar
+  descricao: nvarchar2
+}
+
+
+Table(MedicamentoItem, "MedicamentoItem") {
+  PK(id_item): number
+  FK(id_prescricao): number
+  FK(id_medicamento): number
+  quantidade: number
+  dosagem: varchar
+}
+
+
+Pessoa ||--o{ Profissional 
+Pessoa ||--o{ Paciente 
+Profissional ||--o{ Atendimento 
+Paciente ||--o{ Atendimento 
+Atendimento ||--o{ Prescricao 
+Prescricao ||--o{ MedicamentoItem 
+Medicamento ||--o{ MedicamentoItem 
+Categoria ||--o{ Medicamento 
+Profissional ||--o{ ProfissionalEspecialidade 
+Especialidade ||--o{ ProfissionalEspecialidade 
+@enduml
