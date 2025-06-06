@@ -3,7 +3,7 @@
 actor Profissional
 actor Paciente
 
-rectangle "Sistema de Saúde" {
+rectangle {
   
   usecase "Realizar Atendimento" as UC1
   usecase "Cancela Consulta" as UC2
@@ -28,5 +28,3 @@ UC3 ...>  UC1 : <<include>>
 UC6 ...> UC7 : <<include>>
 UC7 ...> UC8 : <<extend>>
 @enduml
-
-
