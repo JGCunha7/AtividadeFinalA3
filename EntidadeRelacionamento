@@ -85,8 +85,8 @@ Table(MedicamentoItem, "MedicamentoItem") {
 }
 
 
-Pessoa ||--o{ Profissional 
-Pessoa ||--o{ Paciente 
+Pessoa ||--|| Profissional 
+Pessoa ||--|| Paciente 
 Profissional ||--o{ Atendimento 
 Paciente ||--o{ Atendimento 
 Atendimento ||--o{ Prescricao 
