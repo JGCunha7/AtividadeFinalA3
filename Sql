@@ -254,17 +254,22 @@ INSERT INTO Pessoa (nome, cpf)values('thiago','984.123.835-33');
 INSERT INTO Pessoa (nome, cpf)values('pedro','143.456.792-99');
 INSERT INTO Pessoa (nome, cpf)values('maria','491.275.683-88');
 
+SELECT * FROM Pessoa
+
 INSERT INTO Profissional (email, salario, id_pessoa) VALUES ('joao@gmail.com', 3000, 1); 
 INSERT INTO Profissional (email, salario, id_pessoa) VALUES ('thiago@gmail.com', 2500.70, 2); 
 
+SELECT * FROM Profissional
 
 INSERT INTO Paciente (data_nascimento, telefone, id_pessoa) VALUES (TO_DATE('05/06/2025','DD/MM/YYYY'), '99999-0001', 3);
 INSERT INTO Paciente (data_nascimento, telefone, id_pessoa) VALUES (TO_DATE('26/05/2025','DD/MM/YYYY'), '99999-0002', 4);
 
+SELECT * FROM Paciente
 
 INSERT INTO Especialidade (nome, descricao) VALUES ('Psicologia Clínica', 'Atendimento individual com foco em transtornos emocionais');
 INSERT INTO Especialidade (nome, descricao) VALUES ('Psicopedagogia', 'Acompanhamento de dificuldades de aprendizagem');
 
+SELECT * FROM Especialidade
 
 INSERT INTO ProfissionalEspecialidade (data_associacao, ativo, id_profissional, id_especialidade)
 VALUES (TO_DATE('16/05/2025', 'DD/MM/YYYY'), TRUE, 1, 1);
@@ -272,13 +277,15 @@ VALUES (TO_DATE('16/05/2025', 'DD/MM/YYYY'), TRUE, 1, 1);
 INSERT INTO ProfissionalEspecialidade (data_associacao, ativo, id_profissional, id_especialidade)
 VALUES (TO_DATE('26/05/2025', 'DD/MM/YYYY'), TRUE, 2, 2);
 
+SELECT * FROM ProfissonalEspecialidade
 
 INSERT INTO Atendimento (data_hora, descricao, id_profissional, id_paciente)
-VALUES (TO_DATE('15/06/2025 14:00', 'DD/MM/YYYY HH24:MI'), 'Atendimento psicológico com foco em ansiedade', 1, 1);
+VALUES (TO_DATE('15/06/2025 14:00', 'DD/MM/YYYY HH24:MI'), 'Atendimento psicológico com foco em ansiedade', 2, 1);
 
 INSERT INTO Atendimento (data_hora, descricao, id_profissional, id_paciente)
 VALUES (TO_DATE('05/06/2025 09:30', 'DD/MM/YYYY HH24:MI'), 'Sessão voltada para dificuldades escolares', 2, 2);
 
+SELECT * FROM Atendimento
 
 INSERT INTO Prescricao (data_prescricao, validade, observacoes, id_atendimento)
 VALUES (TO_DATE('15/06/2025', 'DD/MM/YYYY'), TO_DATE('15/07/2025', 'DD/MM/YYYY'), 'Realizar atividades de relaxamento diário', 1);
@@ -286,6 +293,7 @@ VALUES (TO_DATE('15/06/2025', 'DD/MM/YYYY'), TO_DATE('15/07/2025', 'DD/MM/YYYY')
 INSERT INTO Prescricao (data_prescricao, validade, observacoes, id_atendimento)
 VALUES (TO_DATE('05/06/2025', 'DD/MM/YYYY'), TO_DATE('05/07/2025', 'DD/MM/YYYY'), 'Iniciar diário de estudos com reforço positivo', 2);
 
+SELECT
 
 INSERT INTO Categoria (nome, descricao)
 VALUES ('Ansiolíticos', 'Medicamentos utilizados para tratamento da ansiedade');
@@ -308,17 +316,20 @@ INSERT INTO MedicamentoItem (quantidade, dosagem, id_prescricao, id_medicamento)
 VALUES (60, '10mg pela manhã', 2, 2);
 
 
+
 SELECT
-  a.id AS atendimento_id,
-  a.data_hora,
-  a.descricao AS descricao_atendimento,
-  pprof.nome AS nome_profissional,
-  ppac.nome AS nome_paciente
-FROM Atendimento a
-JOIN Profissional prof ON a.id_profissional = prof.id
-JOIN Pessoa pprof ON prof.id_pessoa = pprof.id
-JOIN Paciente pac ON a.id_paciente = pac.id
-JOIN Pessoa ppac ON pac.id_pessoa = ppac.id;
+  Atendimento.id,
+  Atendimento.data_hora,
+  Atendimento.descricao,
+  b.nome ,
+  a.nome 
+FROM Atendimento, Profissional,  Paciente, Pessoa b, Pessoa a 
+WHERE Atendimento.id_profissional = Profissional.id
+AND Profissional.id_pessoa = b.id
+AND Atendimento.id_paciente = Paciente.id
+AND Paciente.id_pessoa = a.id;
+
+
 
 SELECT
   pe.id AS prescricao_id,
@@ -337,6 +348,7 @@ JOIN Atendimento a ON pe.id_atendimento = a.id
 JOIN Paciente pac ON a.id_paciente = pac.id
 JOIN Pessoa pp ON pac.id_pessoa = pp.id;
 
+
 SELECT
   esp.nome AS especialidade,
   p.nome AS profissional,
@@ -351,11 +363,3 @@ JOIN Pessoa pa ON pac.id_pessoa = pa.id
 JOIN ProfissionalEspecialidade pse ON pse.id_profissional = prof.id
 JOIN Especialidade esp ON pse.id_especialidade = esp.id
 ORDER BY a.data_hora;
-
-
-
-
-
-
-
-
