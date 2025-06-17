@@ -280,7 +280,7 @@ VALUES (TO_DATE('26/05/2025', 'DD/MM/YYYY'), TRUE, 2, 2);
 SELECT * FROM ProfissonalEspecialidade
 
 INSERT INTO Atendimento (data_hora, descricao, id_profissional, id_paciente)
-VALUES (TO_DATE('15/06/2025 14:00', 'DD/MM/YYYY HH24:MI'), 'Atendimento psicológico com foco em ansiedade', 2, 1);
+VALUES (TO_DATE('15/06/2025 14:00', 'DD/MM/YYYY HH24:MI'), 'Atendimento psicológico com foco em ansiedade', 1, 1);
 
 INSERT INTO Atendimento (data_hora, descricao, id_profissional, id_paciente)
 VALUES (TO_DATE('05/06/2025 09:30', 'DD/MM/YYYY HH24:MI'), 'Sessão voltada para dificuldades escolares', 2, 2);
@@ -321,8 +321,8 @@ SELECT
   Atendimento.id,
   Atendimento.data_hora,
   Atendimento.descricao,
-  b.nome ,
-  a.nome 
+  a.nome, 
+  b.nome
 FROM Atendimento, Profissional,  Paciente, Pessoa b, Pessoa a 
 WHERE Atendimento.id_profissional = Profissional.id
 AND Profissional.id_pessoa = b.id
@@ -332,34 +332,43 @@ AND Paciente.id_pessoa = a.id;
 
 
 SELECT
-  pe.id AS prescricao_id,
-  pe.data_prescricao,
-  pe.validade,
-  pe.observacoes,
-  med.nome AS nome_medicamento,
-  mi.quantidade,
-  mi.dosagem,
-  pp.nome AS nome_paciente
-FROM Prescricao pe
-JOIN MedicamentoItem mi ON pe.id = mi.id_prescricao
-JOIN Medicamento med ON mi.id_medicamento = med.id
-JOIN Categoria c ON med.id_categoria = c.id
-JOIN Atendimento a ON pe.id_atendimento = a.id
-JOIN Paciente pac ON a.id_paciente = pac.id
-JOIN Pessoa pp ON pac.id_pessoa = pp.id;
+prescricao.id,
+prescricao.data_prescricao,
+prescricao.validade,
+prescricao.observacoes,
+Medicamento.nome,
+MedicamentoItem.quantidade,
+MedicamentoItem.dosagem,
+Pessoa.nome 
+FROM Prescricao , MedicamentoItem  , Medicamento , Categoria  , Atendimento , Paciente  , Pessoa  
+WHERe Prescricao.id = MedicamentoItem.id
+and MedicamentoItem.id_medicamento = Medicamento.id
+and Medicamento.id_categoria = Categoria.id
+and prescricao.id_atendimento = Atendimento.id
+and Atendimento.id_paciente = Paciente.id
+and Paciente.id_pessoa = Pessoa.id;
+
 
 
 SELECT
-  esp.nome AS especialidade,
-  p.nome AS profissional,
-  pa.nome AS paciente,
-  a.data_hora,
-  a.descricao
-FROM Atendimento a
-JOIN Profissional prof ON a.id_profissional = prof.id
-JOIN Pessoa p ON prof.id_pessoa = p.id
-JOIN Paciente pac ON a.id_paciente = pac.id
-JOIN Pessoa pa ON pac.id_pessoa = pa.id
-JOIN ProfissionalEspecialidade pse ON pse.id_profissional = prof.id
-JOIN Especialidade esp ON pse.id_especialidade = esp.id
-ORDER BY a.data_hora;
+especialidade.nome,
+a.nome,
+b.nome,
+Atendimento.data_hora,
+Atendimento.descricao,
+Medicamento.nome ,
+MedicamentoItem.quantidade,
+MedicamentoItem.dosagem,
+Categoria.nome
+FROM Prescricao, Atendimento, Profissional, Pessoa a, Paciente, Pessoa b, ProfissionalEspecialidade, Especialidade, MedicamentoItem, Medicamento, Categoria
+WHERE Prescricao.id_atendimento = Atendimento.id
+AND Atendimento.id_profissional = Profissional.id
+AND Profissional.id_pessoa = a.id
+AND Atendimento.id_paciente = Paciente.id
+AND Paciente.id_pessoa = b.id
+AND ProfissionalEspecialidade.id_profissional = Profissional.id
+AND ProfissionalEspecialidade.id_especialidade = Especialidade.id
+AND MedicamentoItem.id_prescricao = Prescricao.id
+AND MedicamentoItem.id_medicamento = Medicamento.id
+AND Medicamento.id_categoria = Categoria.id
+ORDER BY Atendimento.data_hora;
