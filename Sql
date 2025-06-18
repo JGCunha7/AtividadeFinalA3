@@ -256,6 +256,7 @@ INSERT INTO Pessoa (nome, cpf)values('thiago','984.123.835-33');
 INSERT INTO Pessoa (nome, cpf)values('pedro','143.456.792-99');
 INSERT INTO Pessoa (nome, cpf)values('maria','491.275.683-88');
 INSERT INTO Pessoa (nome, cpf)values('carlos','491.275.500-77');
+INSERT INTO Pessoa (nome, cpf)values('marlon','450.200.500-33');
 select * from pessoa;
 
 INSERT INTO Profissional (email, salario, id_pessoa) VALUES ('joao@gmail.com', 3000, 1); 
@@ -266,6 +267,7 @@ select * from profissional;
 INSERT INTO Paciente (data_nascimento, telefone, id_pessoa) VALUES (TO_DATE('05/06/2000','DD/MM/YYYY'), '99999-0001', 3);
 INSERT INTO Paciente (data_nascimento, telefone, id_pessoa) VALUES (TO_DATE('26/05/1998','DD/MM/YYYY'), '99999-0002', 4);
 INSERT INTO Paciente (data_nascimento, telefone, id_pessoa) VALUES (TO_DATE('26/05/2005','DD/MM/YYYY'), '99999-0003', 5);
+INSERT INTO Paciente (data_nascimento, telefone, id_pessoa) VALUES (TO_DATE('26/05/2001','DD/MM/YYYY'), '99999-8888', 6);
 select * from paciente;
 
 
@@ -291,6 +293,9 @@ VALUES (TO_DATE('05/06/2025 09:30', 'DD/MM/YYYY HH24:MI'), 'Sessão voltada para
 
 INSERT INTO Atendimento (data_hora, descricao, id_profissional, id_paciente)
 VALUES (TO_DATE('05/06/2025 09:30', 'DD/MM/YYYY HH24:MI'), 'Atendimento psicológico com foco em ansiedade', 1, 3);
+
+INSERT INTO Atendimento (data_hora, descricao, id_profissional, id_paciente)
+VALUES (TO_DATE('05/06/2025 09:30', 'DD/MM/YYYY HH24:MI'), 'Atendimento psicológico com foco em ansiedade', 1, 5);
 select * from atendimento;
 
 INSERT INTO Categoria (nome, descricao)
@@ -318,13 +323,13 @@ VALUES (TO_DATE('15/06/2025', 'DD/MM/YYYY'), TO_DATE('15/07/2025', 'DD/MM/YYYY')
 select * from prescricao;
 
 INSERT INTO MedicamentoItem (quantidade, dosagem, id_prescricao, id_medicamento)
-VALUES (30, '0.5mg à noite', 1, 1);
+VALUES (50, '0.5mg à noite', 1, 1);
 
 INSERT INTO MedicamentoItem (quantidade, dosagem, id_prescricao, id_medicamento)
 VALUES (30, '0.5mg à noite', 3, 1);
 
 INSERT INTO MedicamentoItem (quantidade, dosagem, id_prescricao, id_medicamento)
-VALUES (60, '10mg pela manhã', 2, 1);
+VALUES (70, '10mg pela manhã', 2, 2);
 select * from medicamentoitem;
 
 
@@ -416,40 +421,39 @@ WHERE Pessoa.id = Paciente.id_pessoa
 GROUP BY Pessoa.nome
 HAVING AVG(MedicamentoItem.quantidade) > 0;
 
-SELECT nome
-FROM Pessoa
-WHERE id IN (
-    SELECT Paciente.id_pessoa
-    FROM Paciente 
-    WHERE Paciente.id IN (
-        SELECT Atendimento.id_paciente
-        FROM Atendimento 
-        WHERE Atendimento.id IN (
-            SELECT Prescricao.id_atendimento
-            FROM Prescricao 
-            WHERE Prescricao.id_medicamento IN (
-                SELECT Medicamento.id
-                FROM Medicamento 
-                WHERE Medicamento.id_categoria = (
-                    SELECT Categoria.id
-                    FROM Categoria 
-                    WHERE Categoria.nome = 'Ansiolíticos'
-                )
-            )
-        )
-    )
-);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 SELECT DISTINCT Medicamento.nome
 FROM Medicamento, MedicamentoItem
 WHERE Medicamento.id = MedicamentoItem.id_medicamento
-  AND MedicamentoItem.quantidade > ANY (
+AND MedicamentoItem.quantidade > ANY (
     SELECT MedicamentoItem.quantidade
     FROM MedicamentoItem, Medicamento
     WHERE MedicamentoItem.id_medicamento = Medicamento.id
-      AND Medicamento.nome = 'Clonazepam'
-  );
+    AND Medicamento.nome = 'Clonazepam');
 
  SELECT Pessoa.nome, Profissional.salario
 FROM Pessoa, Profissional
@@ -457,11 +461,9 @@ WHERE Pessoa.id = Profissional.id_pessoa
   AND Profissional.salario > ALL (
     SELECT salario 
     FROM Profissional 
-    WHERE Profissional.id <> Profissional.id
-  );
+    WHERE Profissional.id <> Profissional.id);
 
-
-
+commit;
 INSERT INTO Paciente (data_nascimento, telefone, id_pessoa)
 SELECT TO_DATE('01/01/1990', 'DD/MM/YYYY'), '99999-999', id
 FROM Pessoa
@@ -470,25 +472,23 @@ FETCH FIRST 1 ROWS ONLY;
 
 select * from paciente;
 
-
 UPDATE Profissional
 SET salario = salario * 1.05
-WHERE id NOT IN (
-  SELECT DISTINCT id_profissional FROM Atendimento WHERE data_hora >= SYSDATE - 180
-);
+WHERE id IN (1, 2);
 
 select * from Profissional;
 
 
-DELETE FROM Prescricao
-WHERE id_medicamento IN (
-  SELECT id
-  FROM Medicamento
-  WHERE id_categoria = (
-    SELECT id FROM Categoria WHERE nome = 'Ansiolíticos'
+DELETE FROM MedicamentoItem
+WHERE id_prescricao IN (
+  SELECT id FROM Prescricao
+  WHERE id_atendimento IN (
+    SELECT id FROM Atendimento
+    WHERE id_paciente = (
+      SELECT id FROM Paciente WHERE id_pessoa = 3
+    )
   )
-)
-AND validade < TO_DATE('01/06/2025', 'DD/MM/YYYY');
+);
 
 
 SELECT nome FROM Pessoa
@@ -525,3 +525,71 @@ WHERE id IN (SELECT id_pessoa FROM Profissional)
 MINUS
 SELECT nome FROM Pessoa
 WHERE id IN (SELECT id_pessoa FROM Paciente);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT nome
+FROM Pessoa
+WHERE id IN (
+    SELECT Paciente.id_pessoa
+    FROM Paciente 
+    WHERE Paciente.id IN (
+        SELECT Atendimento.id_paciente
+        FROM Atendimento 
+        WHERE Atendimento.id IN (
+            SELECT Prescricao.id_atendimento
+            FROM Prescricao 
+            WHERE Prescricao.id_medicamento IN (
+                SELECT Medicamento.id
+                FROM Medicamento 
+                WHERE Medicamento.id_categoria = (
+                    SELECT Categoria.id
+                    FROM Categoria 
+                    WHERE Categoria.nome = 'Ansiolíticos'
+                )
+            )
+        )
+    )
+);
