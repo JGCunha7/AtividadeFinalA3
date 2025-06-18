@@ -5,14 +5,14 @@
 
 
 Table(Pessoa, "Pessoa") {
-  PK(id_pessoa): number
+  id: number
   nome: varchar
   cpf: varchar
 }
 
 
 Table(Profissional, "Profissional") {
-  PK(id_profissional): number
+ id: number
   FK(id_pessoa): number
   email: varchar
   salario: number
@@ -20,7 +20,7 @@ Table(Profissional, "Profissional") {
 
 
 Table(Paciente, "Paciente") {
-  PK(id_paciente): number
+  id: number
   FK(id_pessoa): number
   data_nascimento: date
   telefone: varchar
@@ -28,14 +28,14 @@ Table(Paciente, "Paciente") {
 
 
 Table(Especialidade, "Especialidade") {
-  PK(id_especialidade): number
+  id: number
   nome: varchar
   descricao: nvarchar2
 }
 
 
 Table(ProfissionalEspecialidade, "ProfissionalEspecialidade") {
-  PK(id_prof_esp): number
+  id: number
   FK(id_profissional): number
   FK(id_especialidade): number
   data_associacao: date
@@ -44,7 +44,7 @@ Table(ProfissionalEspecialidade, "ProfissionalEspecialidade") {
 
 
 Table(Atendimento, "Atendimento") {
-  PK(id_atendimento): number
+  id: number
   FK(id_profissional): number
   FK(id_paciente): number
   data_hora: date
@@ -53,7 +53,7 @@ Table(Atendimento, "Atendimento") {
 
 
 Table(Prescricao, "Prescricao") {
-  PK(id_prescricao): number
+  id: number
   FK(id_atendimento): number
   data_prescricao: date
   validade: date
@@ -62,7 +62,7 @@ Table(Prescricao, "Prescricao") {
 
 
 Table(Medicamento, "Medicamento") {
-  PK(id_medicamento): number
+  id: number
   nome: varchar
   descricao: nvarchar2
   FK(id_categoria): number
@@ -70,14 +70,14 @@ Table(Medicamento, "Medicamento") {
 
 
 Table(Categoria, "Categoria") {
-  PK(id_categoria): number
+  id: number
   nome: varchar
   descricao: nvarchar2
 }
 
 
 Table(MedicamentoItem, "MedicamentoItem") {
-  PK(id_item): number
+  id: number
   FK(id_prescricao): number
   FK(id_medicamento): number
   quantidade: number
@@ -90,7 +90,7 @@ Pessoa ||--|| Paciente
 Profissional ||--o{ Atendimento 
 Paciente ||--o{ Atendimento 
 Atendimento ||--o{ Prescricao 
-Prescricao ||--o{ MedicamentoItem 
+Prescricao ||--o{ MedicamentoItem
 Medicamento ||--o{ MedicamentoItem 
 Categoria ||--o{ Medicamento 
 Profissional ||--o{ ProfissionalEspecialidade 
