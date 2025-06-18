@@ -321,10 +321,10 @@ INSERT INTO MedicamentoItem (quantidade, dosagem, id_prescricao, id_medicamento)
 VALUES (30, '0.5mg à noite', 1, 1);
 
 INSERT INTO MedicamentoItem (quantidade, dosagem, id_prescricao, id_medicamento)
-VALUES (30, '0.5mg à noite', 2, 2);
+VALUES (30, '0.5mg à noite', 3, 1);
 
 INSERT INTO MedicamentoItem (quantidade, dosagem, id_prescricao, id_medicamento)
-VALUES (60, '10mg pela manhã', 1, 1);
+VALUES (60, '10mg pela manhã', 2, 1);
 select * from medicamentoitem;
 
 
@@ -480,3 +480,48 @@ WHERE id NOT IN (
 select * from Profissional;
 
 
+DELETE FROM Prescricao
+WHERE id_medicamento IN (
+  SELECT id
+  FROM Medicamento
+  WHERE id_categoria = (
+    SELECT id FROM Categoria WHERE nome = 'Ansiolíticos'
+  )
+)
+AND validade < TO_DATE('01/06/2025', 'DD/MM/YYYY');
+
+
+SELECT nome FROM Pessoa
+WHERE id IN (SELECT id_pessoa FROM Profissional)
+UNION
+SELECT nome FROM Pessoa
+WHERE id IN (SELECT id_pessoa FROM Paciente);
+
+SELECT nome FROM Pessoa
+WHERE id IN (
+  SELECT id_pessoa FROM Paciente
+  WHERE id IN (
+    SELECT id_paciente FROM Atendimento
+    WHERE id IN (
+      SELECT id_atendimento FROM Prescricao
+    )
+  )
+)
+INTERSECT
+SELECT nome FROM Pessoa
+WHERE id IN (
+  SELECT id_pessoa FROM Paciente
+  WHERE id IN (
+    SELECT id_paciente FROM Atendimento
+    WHERE id IN (
+      SELECT id_atendimento FROM Prescricao
+    )
+  )
+);
+
+
+SELECT nome FROM Pessoa
+WHERE id IN (SELECT id_pessoa FROM Profissional)
+MINUS
+SELECT nome FROM Pessoa
+WHERE id IN (SELECT id_pessoa FROM Paciente);
