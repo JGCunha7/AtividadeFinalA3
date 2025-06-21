@@ -45,8 +45,7 @@ id number(10)not null,
 data_prescricao date not null,
 validade date not null,
 observacoes nvarchar2(400),
-id_atendimento number(10) not null,
-id_medicamento number (10)not null
+id_atendimento number(10) not null
 );
 
 create table medicamentoItem(
@@ -91,7 +90,6 @@ alter table ProfissionalEspecialidade add foreign key(id_profissional) reference
 alter table Atendimento add foreign key(id_profissional) references Profissional(id);
 alter table Atendimento add foreign key(id_paciente) references Paciente(id);
 alter table Prescricao add foreign key(id_atendimento) references Atendimento(id);
-alter table Prescricao add foreign key(id_medicamento) references medicamento(id);
 alter table MedicamentoItem add foreign key(id_prescricao) references Prescricao(id);
 alter table MedicamentoItem add foreign key(id_Medicamento) references Medicamento(id);
 alter table Medicamento add foreign key(id_categoria) references Categoria(id);
@@ -422,28 +420,33 @@ GROUP BY Pessoa.nome
 HAVING AVG(MedicamentoItem.quantidade) > 0;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+SELECT nome
+FROM Pessoa
+WHERE id IN (
+    SELECT Profissional.id_pessoa
+    FROM Profissional
+    WHERE Profissional.id IN (
+        SELECT Atendimento.id_profissional
+        FROM Atendimento
+        WHERE Atendimento.id IN (
+            SELECT Prescricao.id_atendimento
+            FROM Prescricao
+            WHERE Prescricao.id IN (
+                SELECT id_prescricao
+                FROM MedicamentoItem
+                WHERE id_medicamento IN (
+                    SELECT id
+                    FROM Medicamento
+                    WHERE id_categoria = (
+                        SELECT id
+                        FROM Categoria
+                        WHERE nome = 'Ansiolíticos'
+                    )
+                )
+            )
+        )
+    )
+);
 
 
 SELECT DISTINCT Medicamento.nome
@@ -525,71 +528,3 @@ WHERE id IN (SELECT id_pessoa FROM Profissional)
 MINUS
 SELECT nome FROM Pessoa
 WHERE id IN (SELECT id_pessoa FROM Paciente);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-SELECT nome
-FROM Pessoa
-WHERE id IN (
-    SELECT Paciente.id_pessoa
-    FROM Paciente 
-    WHERE Paciente.id IN (
-        SELECT Atendimento.id_paciente
-        FROM Atendimento 
-        WHERE Atendimento.id IN (
-            SELECT Prescricao.id_atendimento
-            FROM Prescricao 
-            WHERE Prescricao.id_medicamento IN (
-                SELECT Medicamento.id
-                FROM Medicamento 
-                WHERE Medicamento.id_categoria = (
-                    SELECT Categoria.id
-                    FROM Categoria 
-                    WHERE Categoria.nome = 'Ansiolíticos'
-                )
-            )
-        )
-    )
-);
