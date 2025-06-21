@@ -466,7 +466,6 @@ WHERE Pessoa.id = Profissional.id_pessoa
     FROM Profissional 
     WHERE Profissional.id <> Profissional.id);
 
-commit;
 INSERT INTO Paciente (data_nascimento, telefone, id_pessoa)
 SELECT TO_DATE('01/01/1990', 'DD/MM/YYYY'), '99999-999', id
 FROM Pessoa
