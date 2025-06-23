@@ -458,13 +458,17 @@ AND MedicamentoItem.quantidade > ANY (
     WHERE MedicamentoItem.id_medicamento = Medicamento.id
     AND Medicamento.nome = 'Clonazepam');
 
- SELECT Pessoa.nome, Profissional.salario
-FROM Pessoa, Profissional
+
+SELECT Pessoa.nome, Profissional.salario
+FROM Pessoa , Profissional 
 WHERE Pessoa.id = Profissional.id_pessoa
   AND Profissional.salario > ALL (
-    SELECT salario 
-    FROM Profissional 
-    WHERE Profissional.id <> Profissional.id);
+    SELECT pr.salario 
+    FROM Profissional pr 
+    WHERE pr.id <> Profissional.id
+  );
+
+
 
 INSERT INTO Paciente (data_nascimento, telefone, id_pessoa)
 SELECT TO_DATE('01/01/1990', 'DD/MM/YYYY'), '99999-999', id
@@ -493,33 +497,34 @@ WHERE id_prescricao IN (
 );
 
 
-SELECT nome FROM Pessoa
-WHERE id IN (SELECT id_pessoa FROM Profissional)
-UNION
-SELECT nome FROM Pessoa
-WHERE id IN (SELECT id_pessoa FROM Paciente);
-
-SELECT nome FROM Pessoa
+SELECT nome
+FROM Pessoa
 WHERE id IN (
-  SELECT id_pessoa FROM Paciente
+  SELECT id_pessoa
+  FROM Paciente
   WHERE id IN (
-    SELECT id_paciente FROM Atendimento
+    SELECT id_paciente
+    FROM Atendimento
     WHERE id IN (
-      SELECT id_atendimento FROM Prescricao
+      SELECT id_atendimento
+      FROM Prescricao
     )
   )
 )
 INTERSECT
-SELECT nome FROM Pessoa
+SELECT nome
+FROM Pessoa
 WHERE id IN (
-  SELECT id_pessoa FROM Paciente
+  SELECT id_pessoa
+  FROM Paciente
   WHERE id IN (
-    SELECT id_paciente FROM Atendimento
-    WHERE id IN (
-      SELECT id_atendimento FROM Prescricao
-    )
+    SELECT Atendimento.id_paciente
+    FROM Atendimento
+    JOIN Prescricao ON Atendimento.id = Prescricao.id_atendimento
+    JOIN MedicamentoItem ON Prescricao.id = MedicamentoItem.id_prescricao
   )
 );
+
 
 
 SELECT nome FROM Pessoa
@@ -527,3 +532,8 @@ WHERE id IN (SELECT id_pessoa FROM Profissional)
 MINUS
 SELECT nome FROM Pessoa
 WHERE id IN (SELECT id_pessoa FROM Paciente);
+
+
+
+
+
